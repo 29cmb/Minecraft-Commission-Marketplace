@@ -6,10 +6,10 @@
 - [x] Get categories
 - [x] Get subcategories
 - [x] Get posts in subcategory
-- [ ] Post to review queue
-- [ ] Get staff review queue
-- [ ] Approve post
-- [ ] Deny post
+- [x] Post to review queue
+- [x] Get staff review queue
+- [x] Approve post
+- [x] Deny post
 
 ## Frontend
 - [ ] Homepage
