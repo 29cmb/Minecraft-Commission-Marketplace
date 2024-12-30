@@ -1,8 +1,8 @@
 # TODO
 
 ## Backend
-- [ ] Signup
-- [ ] Login
+- [x] Signup
+- [x] Login
 - [ ] Get categories
 - [ ] Get subcategories
 - [ ] Get posts in subcategory

@@ -6,6 +6,8 @@ const key: string = process.env.APPWRITE_API_KEY || "";
 
 const databaseID: string = process.env.APPWRITE_DATABASE_ID || "";
 const usernamesCollection: string = process.env.APPWRITE_USERNAMES_COLLECTION_ID || "";
+const categoriesCollection: string = process.env.APPWRITE_CATEGORIES_COLLECTION_ID || "";
+const subcategoriesCollection: string = process.env.APPWRITE_SUBCATEGORIES_COLLECTION_ID || "";
 
 const client = new Client()
     .setEndpoint(endpoint)
@@ -39,4 +41,12 @@ const login = (username: string, password: string) => {
     })
 }
 
-export { client, databases, signup, login };
+const getCategories = () => {
+    return databases.listDocuments(databaseID, categoriesCollection);
+}
+
+const getSubcategories = () => {
+    return databases.listDocuments(databaseID, subcategoriesCollection);
+}
+
+export { signup, login, getCategories, getSubcategories };
