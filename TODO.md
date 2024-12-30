@@ -3,8 +3,8 @@
 ## Backend
 - [x] Signup
 - [x] Login
-- [ ] Get categories
-- [ ] Get subcategories
+- [x] Get categories
+- [x] Get subcategories
 - [ ] Get posts in subcategory
 - [ ] Post to review queue
 - [ ] Get staff review queue
