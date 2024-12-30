@@ -106,4 +106,10 @@ const isStaff = (secret: string) => {
     })
 }
 
-export { signup, login, getCategories, getSubcategories, getPostsInSubcategory, getUser, postToQueue, userExists, isStaff };
+const getReviewQueue = () => {
+    return databases.listDocuments(databaseID, postsCollection, [
+        Query.equal("approved", false)
+    ]);
+}
+
+export { signup, login, getCategories, getSubcategories, getPostsInSubcategory, getUser, postToQueue, userExists, isStaff, getReviewQueue };
