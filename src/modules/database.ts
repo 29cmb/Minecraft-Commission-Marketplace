@@ -56,4 +56,54 @@ const getPostsInSubcategory = (subcategory: string) => {
     ]);
 }
 
-export { signup, login, getCategories, getSubcategories, getPostsInSubcategory };
+const getUser = (secret: string) => {
+    const client = new Client().setEndpoint(endpoint).setProject(project).setSession(secret);
+    const clientAccounts = new Account(client);
+    return clientAccounts.get()
+}
+
+const postToQueue = (data: {
+    title: string,
+    short_description: string,
+    long_description: string,
+    comments_enabled: boolean,
+    tags: Array<String>,
+    discord_contact: string,
+    portfolio_link: string,
+    payment: number,
+    post_category: string,
+    subcategory: string,
+    author: string
+}) => {
+    return databases.createDocument(
+        databaseID,
+        postsCollection,
+        ID.unique(),
+        {
+            ...data,
+            approved: false
+        }
+    )
+}
+
+const userExists = (secret: string) => {
+    const client = new Client().setEndpoint(endpoint).setProject(project).setSession(secret);
+    const clientAccounts = new Account(client);
+    return clientAccounts.get().then(() => {
+        return true;
+    }).catch(() => {
+        return false;
+    })
+}
+
+const isStaff = (secret: string) => {
+    const client = new Client().setEndpoint(endpoint).setProject(project).setSession(secret);
+    const clientAccounts = new Account(client);
+    return clientAccounts.get().then((response) => {
+        return response.labels.includes("admin");
+    }).catch(() => {
+        return false;
+    })
+}
+
+export { signup, login, getCategories, getSubcategories, getPostsInSubcategory, getUser, postToQueue, userExists, isStaff };

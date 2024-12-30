@@ -5,9 +5,11 @@
 - [x] Login
 - [x] Get categories
 - [x] Get subcategories
-- [ ] Get posts in subcategory
+- [x] Get posts in subcategory
 - [ ] Post to review queue
 - [ ] Get staff review queue
+- [ ] Approve post
+- [ ] Deny post
 
 ## Frontend
 - [ ] Homepage
