@@ -112,4 +112,10 @@ const getReviewQueue = () => {
     ]);
 }
 
-export { signup, login, getCategories, getSubcategories, getPostsInSubcategory, getUser, postToQueue, userExists, isStaff, getReviewQueue };
+const setApproved = (id: string, approved: boolean) => {
+    return databases.updateDocument(databaseID, postsCollection, id, {
+        approved
+    })
+}
+
+export { signup, login, getCategories, getSubcategories, getPostsInSubcategory, getUser, postToQueue, userExists, isStaff, getReviewQueue, setApproved };
