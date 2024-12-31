@@ -10,8 +10,6 @@
 - [x] Get staff review queue
 - [x] Approve post
 - [x] Deny post
-
-> On hold while mailgun is under a block list for certain providers
 - [ ] Reset password
 - [ ] Email verification
 

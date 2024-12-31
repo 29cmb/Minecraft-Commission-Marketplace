@@ -118,4 +118,27 @@ const setApproved = (id: string, approved: boolean) => {
     })
 }
 
-export { signup, login, getCategories, getSubcategories, getPostsInSubcategory, getUser, postToQueue, userExists, isStaff, getReviewQueue, setApproved };
+const createRecovery = (email: string) => {
+    // TODO: Reset password in the client
+    return accounts.createRecovery(email, `${process.env.CLIENT_URL}/reset-password`);
+}
+
+const updateRecovery = (uid: string, secret: string, password: string) => {
+    return accounts.updateRecovery(uid, secret, password);
+}
+
+export { 
+    signup, 
+    login, 
+    getCategories, 
+    getSubcategories, 
+    getPostsInSubcategory, 
+    getUser, 
+    postToQueue, 
+    userExists, 
+    isStaff, 
+    getReviewQueue, 
+    setApproved, 
+    createRecovery, 
+    updateRecovery
+};
