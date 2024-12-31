@@ -11,13 +11,11 @@ export type PostData = {
     subcategory: string,
     author: string,
     approved?: boolean,
-    created?: Date,
     likes?: [] | [string]
 }
 
 export type CommentData = {
     post_id: string,
-    created?: Date,
     content: string,
     author: string
 }

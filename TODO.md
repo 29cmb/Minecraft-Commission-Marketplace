@@ -17,7 +17,7 @@
 - [x] Comment on post
 - [x] Get post comments
 - [x] Like post
-- [ ] Get likes
+- [x] Get likes
 - [ ] Edit comment
 - [ ] Delete comment
 

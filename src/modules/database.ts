@@ -68,7 +68,6 @@ const postToQueue = (data: PostData) => {
     const newData: PostData = {
         ...data,
         approved: false,
-        created: new Date(),
         likes: []
     }
 
@@ -164,16 +163,11 @@ const deletePost = (id: string) => {
 }
 
 const postComment = (comment: CommentData) => {
-    const newData: CommentData = {
-        ...comment,
-        created: new Date()
-    }
-
     return databases.createDocument(
         databaseID,
         commentsCollection,
         ID.unique(),
-        newData
+        comment
     )
 }
 
@@ -206,6 +200,24 @@ const getLikes = (session: string) => {
     })
 }
 
+const commentExists = (id: string) => {
+    return databases.getDocument(databaseID, commentsCollection, id).then(() => {
+        return true;
+    }).catch(() => {
+        return false;
+    })
+}
+
+const getComment = (id: string) => {
+    return databases.getDocument(databaseID, commentsCollection, id);
+}
+
+const editComment = (id: string, newComment: string) => {
+    return databases.updateDocument(databaseID, commentsCollection, id, {
+        content: newComment
+    });
+}
+
 export { 
     signup, 
     login, 
@@ -229,5 +241,8 @@ export {
     postComment,
     getPostComments,
     likePost,
-    getLikes
+    getLikes,
+    commentExists,
+    getComment,
+    editComment
 };
