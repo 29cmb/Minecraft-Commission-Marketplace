@@ -185,16 +185,24 @@ const getPostComments = (id: string) => {
 
 const likePost = async (id: string, session: string) => {
     const user = await getUser(session);
-    return getPost(id).then((post) => {
-        if(post.likes.includes(user.$id)){
-            return databases.updateDocument(databaseID, postsCollection, id, {
-                likes: post.likes.filter((like: string) => like !== user.$id)
-            })
-        } else {
-            return databases.updateDocument(databaseID, postsCollection, id, {
-                likes: post.likes.push(user.$id)
-            })
-        }
+    const post = await getPost(id);
+
+    if (post.likes.includes(user.$id)) {
+        return databases.updateDocument(databaseID, postsCollection, id, {
+            likes: post.likes.filter((like: string) => like !== user.$id)
+        });
+    } else {
+        return databases.updateDocument(databaseID, postsCollection, id, {
+            likes: [...post.likes, user.$id]
+        });
+    }
+}
+
+const getLikes = (session: string) => {
+    return getUser(session).then((user) => {
+        return databases.listDocuments(databaseID, postsCollection, [
+            Query.contains("likes", [user.$id])
+        ])
     })
 }
 
@@ -220,5 +228,6 @@ export {
     deletePost,
     postComment,
     getPostComments,
-    likePost
+    likePost,
+    getLikes
 };
