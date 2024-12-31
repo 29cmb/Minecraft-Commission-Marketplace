@@ -16,6 +16,8 @@
 - [ ] Comment on post
 - [ ] Get post comments
 - [ ] Like post
+- [ ] Delete post
+- [ ] Delete comment
 
 ## Frontend
 - [ ] Homepage

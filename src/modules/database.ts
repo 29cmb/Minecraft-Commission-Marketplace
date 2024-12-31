@@ -145,6 +145,18 @@ const updatePost = (id: string, data: PostData) => {
     return databases.updateDocument(databaseID, postsCollection, id, data);
 }
 
+const deletePost = (id: string) => {
+    return databases.deleteDocument(databaseID, postsCollection, id).then(() => {
+        return databases.listDocuments(databaseID, commentsCollection, [
+            Query.equal("post_id", id)
+        ]).then((response) => {
+            return response.documents.forEach((comment) => {
+                return databases.deleteDocument(databaseID, commentsCollection, comment.$id);
+            })
+        })  
+    });
+}
+
 export { 
     signup, 
     login, 
@@ -162,5 +174,6 @@ export {
     createVerification,
     updateVerification,
     getPost,
-    updatePost
+    updatePost,
+    deletePost
 };
