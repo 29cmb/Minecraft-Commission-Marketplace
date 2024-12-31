@@ -18,8 +18,8 @@
 - [x] Get post comments
 - [x] Like post
 - [x] Get likes
-- [ ] Edit comment
-- [ ] Delete comment
+- [x] Edit comment
+- [x] Delete comment
 
 ## Frontend
 - [ ] Homepage

@@ -218,6 +218,10 @@ const editComment = (id: string, newComment: string) => {
     });
 }
 
+const deleteComment = (id: string) => {
+    return databases.deleteDocument(databaseID, commentsCollection, id);
+}
+
 export { 
     signup, 
     login, 
@@ -244,5 +248,6 @@ export {
     getLikes,
     commentExists,
     getComment,
-    editComment
+    editComment,
+    deleteComment
 };
