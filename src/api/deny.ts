@@ -1,5 +1,5 @@
 import { Express } from 'express'
-import { isStaff, setApproved, userExists } from '../modules/database'
+import { isStaff, postExists, setApproved, userExists } from '../modules/database'
 export default (app: Express) => {
     app.post("/api/v1/deny", async (req, res) => {
         const { id } = req.body
@@ -9,6 +9,11 @@ export default (app: Express) => {
         }
 
         const auth = req.headers.authorization;
+
+        if(!await postExists(id)){
+            res.status(404).json({ success: false, message: "Post not found" })
+            return
+        }
 
         if(!auth || !await userExists(auth) || !await isStaff(auth)){
             res.status(403).json({ success: false, message: "User cannot invoke method" })

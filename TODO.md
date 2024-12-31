@@ -13,10 +13,11 @@
 - [x] Reset password
 - [x] Email verification
 - [x] Edit post contents
+- [x] Delete post
 - [ ] Comment on post
 - [ ] Get post comments
 - [ ] Like post
-- [ ] Delete post
+- [ ] Edit comment
 - [ ] Delete comment
 
 ## Frontend

@@ -1,5 +1,5 @@
 import { Client, Databases, ID, Account, Query } from 'node-appwrite';
-import { PostData } from '../Types';
+import { CommentData, PostData } from '../Types';
 
 const endpoint: string = process.env.APPWRITE_ENDPOINT || "https://cloud.appwrite.io/v1";
 const project: string = process.env.APPWRITE_PROJECT || "";
@@ -65,13 +65,10 @@ const getUser = (secret: string) => {
 }
 
 const postToQueue = (data: PostData) => {
-    const estDate = new Date();
-    estDate.setHours(estDate.getHours() - 5);
-
     const newData: PostData = {
         ...data,
         approved: false,
-        created: estDate
+        created: new Date()
     }
 
     return databases.createDocument(
@@ -140,6 +137,14 @@ const getPost = (id: string) => {
     return databases.getDocument(databaseID, postsCollection, id);
 }
 
+const postExists = (id: string) => {
+    return databases.getDocument(databaseID, postsCollection, id).then(() => {
+        return true;
+    }).catch(() => {
+        return false;
+    })
+}
+
 const updatePost = (id: string, data: PostData) => {
     data.approved = false;
     return databases.updateDocument(databaseID, postsCollection, id, data);
@@ -155,6 +160,26 @@ const deletePost = (id: string) => {
             })
         })  
     });
+}
+
+const postComment = (comment: CommentData) => {
+    const newData: CommentData = {
+        ...comment,
+        created: new Date()
+    }
+
+    return databases.createDocument(
+        databaseID,
+        commentsCollection,
+        ID.unique(),
+        newData
+    )
+}
+
+const getPostComments = (id: string) => {
+    return databases.listDocuments(databaseID, commentsCollection, [
+        Query.equal("post_id", id)
+    ]);
 }
 
 export { 
@@ -174,6 +199,9 @@ export {
     createVerification,
     updateVerification,
     getPost,
+    postExists,
     updatePost,
-    deletePost
+    deletePost,
+    postComment,
+    getPostComments
 };

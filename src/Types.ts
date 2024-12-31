@@ -13,3 +13,10 @@ export type PostData = {
     approved?: boolean,
     created?: Date
 }
+
+export type CommentData = {
+    post_id: string,
+    created?: Date,
+    content: string,
+    author: string
+}

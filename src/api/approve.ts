@@ -1,10 +1,15 @@
 import { Express } from 'express'
-import { isStaff, setApproved, userExists } from '../modules/database'
+import { isStaff, postExists, setApproved, userExists } from '../modules/database'
 export default (app: Express) => {
     app.post("/api/v1/approve", async (req, res) => {
         const { id } = req.body
         if(!id || typeof id !== "string") {
             res.status(400).json({ success: false, message: "Required fields not provided or not formatted properly" })
+            return
+        }
+
+        if(!await postExists(id)){
+            res.status(404).json({ success: false, message: "Post not found" })
             return
         }
 
