@@ -10,5 +10,6 @@ export type PostData = {
     post_category: string,
     subcategory: string,
     author: string,
-    approved?: boolean
+    approved?: boolean,
+    created?: Date
 }

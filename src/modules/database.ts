@@ -10,6 +10,7 @@ const usernamesCollection: string = process.env.APPWRITE_USERNAMES_COLLECTION_ID
 const categoriesCollection: string = process.env.APPWRITE_CATEGORIES_COLLECTION_ID || "";
 const subcategoriesCollection: string = process.env.APPWRITE_SUBCATEGORIES_COLLECTION_ID || "";
 const postsCollection: string = process.env.APPWRITE_POSTS_COLLECTION_ID || "";
+const commentsCollection: string = process.env.APPWRITE_COMMENTS_COLLECTION_ID || "";
 
 const client = new Client()
     .setEndpoint(endpoint)
@@ -64,14 +65,20 @@ const getUser = (secret: string) => {
 }
 
 const postToQueue = (data: PostData) => {
+    const estDate = new Date();
+    estDate.setHours(estDate.getHours() - 5);
+
+    const newData: PostData = {
+        ...data,
+        approved: false,
+        created: estDate
+    }
+
     return databases.createDocument(
         databaseID,
         postsCollection,
         ID.unique(),
-        {
-            ...data,
-            approved: false
-        }
+        newData
     )
 }
 

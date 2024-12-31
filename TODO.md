@@ -12,7 +12,7 @@
 - [x] Deny post
 - [x] Reset password
 - [x] Email verification
-- [ ] Edit post contents
+- [x] Edit post contents
 - [ ] Comment on post
 - [ ] Get post comments
 - [ ] Like post
