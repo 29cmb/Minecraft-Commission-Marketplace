@@ -1,4 +1,5 @@
 import { Client, Databases, ID, Account, Query } from 'node-appwrite';
+import { PostData } from '../Types';
 
 const endpoint: string = process.env.APPWRITE_ENDPOINT || "https://cloud.appwrite.io/v1";
 const project: string = process.env.APPWRITE_PROJECT || "";
@@ -62,19 +63,7 @@ const getUser = (secret: string) => {
     return clientAccounts.get()
 }
 
-const postToQueue = (data: {
-    title: string,
-    short_description: string,
-    long_description: string,
-    comments_enabled: boolean,
-    tags: Array<String>,
-    discord_contact: string,
-    portfolio_link: string,
-    payment: number,
-    post_category: string,
-    subcategory: string,
-    author: string
-}) => {
+const postToQueue = (data: PostData) => {
     return databases.createDocument(
         databaseID,
         postsCollection,
@@ -140,6 +129,15 @@ const updateVerification = (uid: string, secret: string, session: string) => {
     return userAccounts.updateVerification(uid, secret);
 }
 
+const getPost = (id: string) => {
+    return databases.getDocument(databaseID, postsCollection, id);
+}
+
+const updatePost = (id: string, data: PostData) => {
+    data.approved = false;
+    return databases.updateDocument(databaseID, postsCollection, id, data);
+}
+
 export { 
     signup, 
     login, 
@@ -155,5 +153,7 @@ export {
     createRecovery, 
     updateRecovery,
     createVerification,
-    updateVerification
+    updateVerification,
+    getPost,
+    updatePost
 };

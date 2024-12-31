@@ -25,6 +25,8 @@
 - [ ] Subcategories
 - [ ] Subcategory form posts
 - [ ] Single post
+- [ ] Email verification
+- [ ] Password reset
 
 
 ## Potential features for a future update
