@@ -2,10 +2,10 @@ import { Express } from 'express'
 import { getReviewQueue, getUser, isStaff, userExists } from '../modules/database';
 export default (app: Express) => {
     app.get("/api/v1/review", async (req, res) => {
-        const auth = req.headers.authorization?.substring(7);
+        const auth = req.headers.authorization;
 
         if(!auth || !await userExists(auth) || !await isStaff(auth)){
-            res.status(400).json({ success: false, message: "User cannot invoke method" })
+            res.status(403).json({ success: false, message: "User cannot invoke method" })
             return
         }
 

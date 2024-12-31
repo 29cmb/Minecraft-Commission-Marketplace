@@ -15,10 +15,10 @@ export default (app: Express) => {
             subcategory
         } = req.body
 
-        const auth = req.headers.authorization?.substring(7);
+        const auth = req.headers.authorization;
 
         if(!auth || !await userExists(auth)){
-            res.status(400).json({ success: false, message: "User cannot invoke method" })
+            res.status(401).json({ success: false, message: "User cannot invoke method" })
             return
         }
 
@@ -49,7 +49,7 @@ export default (app: Express) => {
         }
 
         if(post_category == "announcement" && !await isStaff(auth)){
-            res.status(400).json({ success: false, message: "User cannot create announcements" })
+            res.status(403).json({ success: false, message: "User cannot create announcements" })
             return
         }
 

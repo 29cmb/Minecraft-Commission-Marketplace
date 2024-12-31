@@ -127,6 +127,19 @@ const updateRecovery = (uid: string, secret: string, password: string) => {
     return accounts.updateRecovery(uid, secret, password);
 }
 
+const createVerification = (session: string) => {
+    const userClient = new Client().setEndpoint(endpoint).setProject(project).setSession(session);
+    const userAccounts = new Account(userClient);
+    // TODO: Verify email in the client
+    return userAccounts.createVerification(`${process.env.CLIENT_URL}/verify-email`);
+}
+
+const updateVerification = (uid: string, secret: string, session: string) => {
+    const userClient = new Client().setEndpoint(endpoint).setProject(project).setSession(session);
+    const userAccounts = new Account(userClient);
+    return userAccounts.updateVerification(uid, secret);
+}
+
 export { 
     signup, 
     login, 
@@ -140,5 +153,7 @@ export {
     getReviewQueue, 
     setApproved, 
     createRecovery, 
-    updateRecovery
+    updateRecovery,
+    createVerification,
+    updateVerification
 };

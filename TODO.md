@@ -10,8 +10,12 @@
 - [x] Get staff review queue
 - [x] Approve post
 - [x] Deny post
-- [ ] Reset password
-- [ ] Email verification
+- [x] Reset password
+- [x] Email verification
+- [ ] Edit post contents
+- [ ] Comment on post
+- [ ] Get post comments
+- [ ] Like post
 
 ## Frontend
 - [ ] Homepage
