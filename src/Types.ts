@@ -11,7 +11,8 @@ export type PostData = {
     subcategory: string,
     author: string,
     approved?: boolean,
-    created?: Date
+    created?: Date,
+    likes?: [] | [string]
 }
 
 export type CommentData = {

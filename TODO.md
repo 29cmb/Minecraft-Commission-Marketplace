@@ -14,9 +14,9 @@
 - [x] Email verification
 - [x] Edit post contents
 - [x] Delete post
-- [ ] Comment on post
-- [ ] Get post comments
-- [ ] Like post
+- [x] Comment on post
+- [x] Get post comments
+- [x] Like post
 - [ ] Edit comment
 - [ ] Delete comment
 

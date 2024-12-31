@@ -68,7 +68,8 @@ const postToQueue = (data: PostData) => {
     const newData: PostData = {
         ...data,
         approved: false,
-        created: new Date()
+        created: new Date(),
+        likes: []
     }
 
     return databases.createDocument(
@@ -182,6 +183,21 @@ const getPostComments = (id: string) => {
     ]);
 }
 
+const likePost = async (id: string, session: string) => {
+    const user = await getUser(session);
+    return getPost(id).then((post) => {
+        if(post.likes.includes(user.$id)){
+            return databases.updateDocument(databaseID, postsCollection, id, {
+                likes: post.likes.filter((like: string) => like !== user.$id)
+            })
+        } else {
+            return databases.updateDocument(databaseID, postsCollection, id, {
+                likes: post.likes.push(user.$id)
+            })
+        }
+    })
+}
+
 export { 
     signup, 
     login, 
@@ -203,5 +219,6 @@ export {
     updatePost,
     deletePost,
     postComment,
-    getPostComments
+    getPostComments,
+    likePost
 };
