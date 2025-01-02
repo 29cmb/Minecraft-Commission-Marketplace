@@ -222,6 +222,26 @@ const deleteComment = (id: string) => {
     return databases.deleteDocument(databaseID, commentsCollection, id);
 }
 
+const getPostsInCategory = (category: string) => {
+    return databases.listDocuments(databaseID, subcategoriesCollection, [
+        Query.equal('category', category)
+    ])
+    .then((subcategories) => {
+        const subcategoryName = subcategories.documents.map((doc) => doc.name);
+        return databases.listDocuments(databaseID, postsCollection, [
+            Query.contains('subcategory', subcategoryName)
+        ]);
+    });
+}
+
+const categoryExists = (category: string) => {
+    return databases.listDocuments(databaseID, categoriesCollection, [
+        Query.equal('name', category)
+    ]).then((response) => {
+        return response.documents.length > 0;
+    });
+}
+
 export { 
     signup, 
     login, 
@@ -249,5 +269,7 @@ export {
     commentExists,
     getComment,
     editComment,
-    deleteComment
+    deleteComment,
+    getPostsInCategory,
+    categoryExists
 };

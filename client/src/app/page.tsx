@@ -1,4 +1,15 @@
-export default function Home() {
+import { PostsReponseSuccess, RequestFail } from "@/Types";
+
+export default async function Home() {
+  const postsInPlugins: PostsReponseSuccess | RequestFail = await fetch(`${process.env.CLIENT_URL}/api/v1/posts/category/plugins`).then(res => res.json());
+  const totalPostsInCategory: number = postsInPlugins.success ? postsInPlugins.posts.total : 0
+
+  const postsInPaper: PostsReponseSuccess | RequestFail = await fetch(`${process.env.CLIENT_URL}/api/v1/Paper/posts`).then(res => res.json());
+  const totalPostsInPaper: number = postsInPaper.success ? postsInPaper.posts.total : 0
+
+  const postsInSpigot: PostsReponseSuccess | RequestFail = await fetch(`${process.env.CLIENT_URL}/api/v1/Spigot/posts`).then(res => res.json());
+  const totalPostsInSpigot: number = postsInSpigot.success ? postsInSpigot.posts.total : 0
+
   return (
     <>
       <div className="bg-[#25262B] w-screen h-[30em] flex items-center justify-center">
@@ -24,9 +35,9 @@ export default function Home() {
         </div>
         <div className="w-screen h-[2px] bg-[#353535] mt-[100px] mb-[100px]"></div>
         <div className="w-screen h-[62em] leading-[680%]">
-          <h1 className="text-center text-white font-inter font-bold text-[100px]"><span className="text-[120px] bg-gradient-to-b from-[#EB3971] to-[#CC1D43] bg-clip-text text-transparent relative top-5">10</span> posts in the Plugins Category</h1>
-          <h2 className="text-center text-white font-inter font-bold text-[80px]"><span className="text-[120px] bg-gradient-to-b from-[#4EEB39] to-[#1DCC60] bg-clip-text text-transparent relative top-5">2</span> posts in the Paper subcategory</h2>
-          <h2 className="text-center text-white font-inter font-bold text-[80px]"><span className="text-[120px] bg-gradient-to-b from-[#EBDC39] to-[#CC9D1D] bg-clip-text text-transparent relative top-5">8</span> posts in Spigot subcategory</h2>
+          <h1 className="text-center text-white font-inter font-bold text-[100px]"><span className="text-[120px] bg-gradient-to-b from-[#EB3971] to-[#CC1D43] bg-clip-text text-transparent relative top-5">{totalPostsInCategory}</span> posts in the Plugins Category</h1>
+          <h2 className="text-center text-white font-inter font-bold text-[80px]"><span className="text-[120px] bg-gradient-to-b from-[#4EEB39] to-[#1DCC60] bg-clip-text text-transparent relative top-5">{totalPostsInPaper}</span> posts in the Paper subcategory</h2>
+          <h2 className="text-center text-white font-inter font-bold text-[80px]"><span className="text-[120px] bg-gradient-to-b from-[#EBDC39] to-[#CC9D1D] bg-clip-text text-transparent relative top-5">{totalPostsInSpigot}</span> posts in Spigot subcategory</h2>
         </div>
       </div>
     </>
