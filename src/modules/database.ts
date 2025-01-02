@@ -44,9 +44,35 @@ const login = (username: string, password: string) => {
     })
 }
 
-const getCategories = () => {
-    return databases.listDocuments(databaseID, categoriesCollection);
+const getCategories = async () => {
+    const categoriesResponse = await databases.listDocuments(databaseID, categoriesCollection);
+    const categories = categoriesResponse.documents;
+
+    const categoriesWithCounts = await Promise.all(categories.map(async (category) => {
+        const subcategoriesResponse = await databases.listDocuments(databaseID, subcategoriesCollection, [
+            Query.equal("category", category.name)
+        ]);
+        const subcategories = subcategoriesResponse.documents;
+
+        const postsCount = await Promise.all(subcategories.map(async (subcategory) => {
+            const postsResponse = await databases.listDocuments(databaseID, postsCollection, [
+                Query.equal("subcategory", subcategory.name)
+            ]);
+            return postsResponse.total;
+        }));
+
+        const totalPosts = postsCount.reduce((acc, count) => acc + count, 0);
+
+        return {
+            ...category,
+            subcategoriesCount: subcategories.length,
+            postsCount: totalPosts
+        };
+    }));
+
+    return categoriesWithCounts;
 }
+
 
 const getSubcategories = () => {
     return databases.listDocuments(databaseID, subcategoriesCollection);

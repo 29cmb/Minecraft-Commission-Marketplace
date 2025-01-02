@@ -38,3 +38,38 @@ export type CategoryProps = {
     ctype: number // 0 = category, 1 = subcategory
     category?: string
 }
+
+export type CategoriesResponseSuccess = {
+    success: true,
+    categories: [{
+        name: string,
+        $id: string,
+        $createdAt: string,
+        $updatedAt: string,
+        $permissions: [],
+        $databaseId: string,
+        $collectionId: string,
+        subcategoriesCount: number,
+        postsCount: number
+    }]
+}
+
+export type SubcategoriesResponseSuccess = {
+    success: true,
+    subcategories: {
+        documents: [
+            {
+                name: string,
+                category: string,
+                $id: string,
+                $createdAt: string,
+                $updatedAt: string,
+                $permissions: [],
+                $databaseId: string,
+                $collectionId: string,
+                subcategoriesCount: number,
+                postsCount: number
+            }
+        ]
+    }
+}
