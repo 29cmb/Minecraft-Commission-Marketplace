@@ -1,12 +1,12 @@
 export type RequestFail = {
-    success: false,
+    success: false
     message: string
 }
 
 export type PostsReponseSuccess = {
-    success: true;
+    success: true
     posts: {
-        total: number;
+        total: number
         documents: [
             {
                 title: string,
@@ -29,4 +29,12 @@ export type PostsReponseSuccess = {
             }
         ]
     }
+}
+
+export type CategoryProps = {
+    name: string
+    subcategories: number
+    posts: number
+    ctype: number // 0 = category, 1 = subcategory
+    category?: string
 }
