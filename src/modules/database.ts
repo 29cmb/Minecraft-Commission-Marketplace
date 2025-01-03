@@ -1,5 +1,5 @@
-import { Client, Databases, ID, Account, Query, Users } from 'node-appwrite';
-import { CommentData, PostData } from '../Types';
+import { Client, Databases, ID, Account, Query, Users, Models } from 'node-appwrite';
+import { CommentData, DocumentPostData, PostData } from '../Types';
 
 const endpoint: string = process.env.APPWRITE_ENDPOINT || "https://cloud.appwrite.io/v1";
 const project: string = process.env.APPWRITE_PROJECT || "";
@@ -21,7 +21,7 @@ const databases = new Databases(client);
 const accounts = new Account(client);
 const users = new Users(client);
 
-const signup = (email: string, username: string, password: string) => {
+const signup = async (email: string, username: string, password: string) => {
     return accounts.create(ID.unique(), email, password)
     .then(() => {
         return databases.createDocument(
@@ -36,7 +36,7 @@ const signup = (email: string, username: string, password: string) => {
     })
 }
 
-const login = (username: string, password: string) => {
+const login = async (username: string, password: string) => {
     return databases.listDocuments(databaseID, usernamesCollection, [
         Query.equal("username", username)
     ]).then((response) => {
@@ -86,9 +86,13 @@ const getPostsInSubcategory = (subcategory: string) => {
                 Query.equal("subcategory", subcategory)
             ]);
 
-            const posts = postsResponse.documents;
+            const posts: DocumentPostData[] = postsResponse.documents as unknown as DocumentPostData[];
 
-            const promises = posts.map(async (post) => {
+            const promises = posts.map(async (post: DocumentPostData) => {
+                if(post.approved === false) {
+                    return null;
+                }
+
                 const author = post.author;
                 if (author == null) {
                     post.author_name = "Unknown";
@@ -122,7 +126,8 @@ const getPostsInSubcategory = (subcategory: string) => {
     });
 };
 
-const getUser = (secret: string) => {
+const getUser: 
+    (secret: string) => Promise<Models.User<Models.Preferences>> = (secret: string) => {
     const client = new Client().setEndpoint(endpoint).setProject(project).setSession(secret);
     const clientAccounts = new Account(client);
     return clientAccounts.get()
@@ -143,7 +148,7 @@ const postToQueue = (data: PostData) => {
     )
 }
 
-const userExists = (secret: string) => {
+const userExists = async (secret: string) => {
     const client = new Client().setEndpoint(endpoint).setProject(project).setSession(secret);
     const clientAccounts = new Account(client);
     return clientAccounts.get().then(() => {
@@ -153,7 +158,7 @@ const userExists = (secret: string) => {
     })
 }
 
-const isStaff = (secret: string) => {
+const isStaff = async (secret: string) => {
     const client = new Client().setEndpoint(endpoint).setProject(project).setSession(secret);
     const clientAccounts = new Account(client);
     return clientAccounts.get().then((response) => {
@@ -201,7 +206,7 @@ const getPost = (id: string) => {
     return databases.getDocument(databaseID, postsCollection, id);
 }
 
-const postExists = (id: string) => {
+const postExists = async (id: string) => {
     return databases.getDocument(databaseID, postsCollection, id).then(() => {
         return true;
     }).catch(() => {
@@ -214,7 +219,7 @@ const updatePost = (id: string, data: PostData) => {
     return databases.updateDocument(databaseID, postsCollection, id, data);
 }
 
-const deletePost = (id: string) => {
+const deletePost = async (id: string) => {
     return databases.deleteDocument(databaseID, postsCollection, id).then(() => {
         return databases.listDocuments(databaseID, commentsCollection, [
             Query.equal("post_id", id)
@@ -256,7 +261,7 @@ const likePost = async (id: string, session: string) => {
     }
 }
 
-const getLikes = (session: string) => {
+const getLikes = async (session: string) => {
     return getUser(session).then((user) => {
         return databases.listDocuments(databaseID, postsCollection, [
             Query.contains("likes", [user.$id])
@@ -264,7 +269,7 @@ const getLikes = (session: string) => {
     })
 }
 
-const commentExists = (id: string) => {
+const commentExists = async (id: string) => {
     return databases.getDocument(databaseID, commentsCollection, id).then(() => {
         return true;
     }).catch(() => {
@@ -286,7 +291,7 @@ const deleteComment = (id: string) => {
     return databases.deleteDocument(databaseID, commentsCollection, id);
 }
 
-const getPostsInCategory = (category: string) => {
+const getPostsInCategory = async (category: string) => {
     return databases.listDocuments(databaseID, subcategoriesCollection, [
         Query.equal('category', category)
     ])
@@ -298,7 +303,7 @@ const getPostsInCategory = (category: string) => {
     });
 }
 
-const categoryExists = (category: string) => {
+const categoryExists = async (category: string) => {
     return databases.listDocuments(databaseID, categoriesCollection, [
         Query.equal('name', category)
     ]).then((response) => {

@@ -12,7 +12,10 @@ export type PostData = {
     author: string,
     approved?: boolean,
     likes?: [] | [string]
+    author_name?: string
 }
+
+export interface DocumentPostData extends Document, PostData {}
 
 export type CommentData = {
     post_id: string,
