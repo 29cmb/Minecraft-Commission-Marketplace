@@ -47,7 +47,7 @@ interface Params extends ParsedUrlQuery {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { category, subcategory } = context.params as Params;
 
-  const res = await fetch(`${process.env.CLIENT_URL}/api/v1/${subcategory}/posts`);
+  const res = await fetch(`${process.env.SERVER_URL}/api/v1/${subcategory}/posts`);
   const data = await res.json();
 
   return {

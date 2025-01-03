@@ -43,7 +43,7 @@ interface Params extends ParsedUrlQuery {
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { id } = context.params as Params;
 
-    const res = await fetch(`${process.env.CLIENT_URL}/api/v1/post/${id}`);
+    const res = await fetch(`${process.env.SERVER_URL}/api/v1/post/${id}`);
     const categories: PostResponseSuccess | RequestFail = await res.json();
 
     return {

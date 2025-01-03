@@ -2,13 +2,13 @@ import HomepageRedirectButton from "@/components/HomepageRedirectButton";
 import { PostsReponseSuccess, RequestFail } from "@/Types";
 
 export default async function Home() {
-  const postsInPlugins: PostsReponseSuccess | RequestFail = await fetch(`${process.env.CLIENT_URL}/api/v1/posts/category/plugins`).then(res => res.json());
+  const postsInPlugins: PostsReponseSuccess | RequestFail = await fetch(`${process.env.SERVER_URL}/api/v1/posts/category/plugins`).then(res => res.json());
   const totalPostsInCategory: number = postsInPlugins.success ? postsInPlugins.posts.total : 0
 
-  const postsInPaper: PostsReponseSuccess | RequestFail = await fetch(`${process.env.CLIENT_URL}/api/v1/Paper/posts`).then(res => res.json());
+  const postsInPaper: PostsReponseSuccess | RequestFail = await fetch(`${process.env.SERVER_URL}/api/v1/Paper/posts`).then(res => res.json());
   const totalPostsInPaper: number = postsInPaper.success ? postsInPaper.posts.total : 0
 
-  const postsInSpigot: PostsReponseSuccess | RequestFail = await fetch(`${process.env.CLIENT_URL}/api/v1/Spigot/posts`).then(res => res.json());
+  const postsInSpigot: PostsReponseSuccess | RequestFail = await fetch(`${process.env.SERVER_URL}/api/v1/Spigot/posts`).then(res => res.json());
   const totalPostsInSpigot: number = postsInSpigot.success ? postsInSpigot.posts.total : 0
 
   return (

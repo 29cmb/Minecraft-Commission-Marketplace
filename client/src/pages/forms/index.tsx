@@ -21,7 +21,7 @@ export default function Forms({ categories }: { categories: CategoriesResponseSu
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const res = await fetch(`${process.env.CLIENT_URL}/api/v1/categories`);
+  const res = await fetch(`${process.env.SERVER_URL}/api/v1/categories`);
   const categories: CategoriesResponseSuccess | RequestFail = await res.json();
 
   return {

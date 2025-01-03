@@ -21,7 +21,7 @@ export default function Forms({ subcategoryRequest }: { subcategoryRequest: Subc
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const res = await fetch(`${process.env.CLIENT_URL}/api/v1/subcategories`);
+  const res = await fetch(`${process.env.SERVER_URL}/api/v1/subcategories`);
   const subcategoryRequest: SubcategoriesResponseSuccess | RequestFail = await res.json();
 
   if (!subcategoryRequest.success || !Array.isArray(subcategoryRequest.subcategories.documents)) {
@@ -36,7 +36,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   }
 
   for (const sub of subcategoryRequest.subcategories.documents) {
-    const postsInSub: PostsReponseSuccess | RequestFail = await (await fetch(`${process.env.CLIENT_URL}/api/v1/${sub.name}/posts`)).json();
+    const postsInSub: PostsReponseSuccess | RequestFail = await (await fetch(`${process.env.SERVER_URL}/api/v1/${sub.name}/posts`)).json();
     if (postsInSub.success) {
       sub.postsCount = postsInSub.posts.total;
     }

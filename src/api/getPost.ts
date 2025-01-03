@@ -1,9 +1,10 @@
 import { Express } from 'express';
 import { getPost, getPostComments, postExists } from '../modules/database';
-import { CommentData, DocumentPostData, PostData } from '../Types';
+import { CommentData } from '../Types';
 
 export default (app: Express) => {
     app.get("/api/v1/post/:id", async (req, res) => {
+        console.log("GET /api/v1/post/:id");
         const { id } = req.params;
         if (!id || typeof id !== "string") {
             res.status(400).json({ success: false, message: "Required fields not provided or not formatted properly" });
@@ -19,6 +20,7 @@ export default (app: Express) => {
         const commentsResponse = await getPostComments(id);
         post.comments = commentsResponse.documents || [];
         res.status(200).json({ success: true, post });
+        console.log("GET /api/v1/post/:id success");
     });
 
     return {
