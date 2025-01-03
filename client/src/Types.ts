@@ -26,6 +26,7 @@ export type PostsReponseSuccess = {
                 $permissions: [],
                 $databaseId: string,
                 $collectionId: string
+                author_name: string
             }
         ]
     }
@@ -79,7 +80,7 @@ export type PostProps = {
     short_description: string,
     tags: Array<string>,
     post_category: string,
-    post_color: string,
     author_name: string,
-    post_date: string
+    post_date: string,
+    id: string
 }

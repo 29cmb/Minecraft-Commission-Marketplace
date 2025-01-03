@@ -1,38 +1,59 @@
-import { useRouter } from 'next/router';
 import "@/styles/globals.css";
 import Post from '@/components/Post';
-
-export default function Subcategory() {
-  const router = useRouter();
-  const { category, subcategory } = router.query;
-
+import { GetServerSideProps } from 'next';
+import { ParsedUrlQuery } from 'querystring';
+import { PostsReponseSuccess } from '@/Types';
+export default function Subcategory({ subcategory, postsResponse }: { subcategory: string, postsResponse: PostsReponseSuccess }) {
   const capitalizeFirstLetter = (string: string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
-  console.log(category, subcategory)
-
+  if(!postsResponse || !postsResponse.posts) return <></>
+  console.log(postsResponse.posts)
   return (
     <>
       <h1 className="text-center font-inter font-bold text-[70px] mt-[40px]">
         {subcategory ? capitalizeFirstLetter(subcategory as string) : 'Loading...'}
       </h1>
       <div className="flex justify-center">
-        <button className="inline-flex items-center justify-center text-center font-inter text-white text-[30px] bg-[#36BE5A] py-[10px] px-[400px] leading-none rounded-xl transform transition-transform duration-200 ease-in-out hover:scale-110">
+        <button className="inline-flex items-center justify-center text-center font-inter text-white text-[30px] bg-[#36BE5A] py-[10px] w-[calc(100vw-400px)] leading-none rounded-xl transform transition-transform duration-200 ease-in-out hover:scale-110">
           Post
         </button>
       </div>
-      <div className="p-[20px]">
-        <Post 
-          title='This a test' 
-          short_description='A simple test of the post thing' 
-          tags={["test", "test1", "test2", "test3"]} 
-          post_category='Announcement'
-          post_color='#E31010'
-          author_name='devcmb'
-          post_date='2025-01-01T05:00:00.000Z'
-        />
+      <div className="p-[20px] px-[200px]">
+        {postsResponse.posts.documents.map((post, index) => (
+          <Post 
+            title={post.title} 
+            short_description={post.short_description} 
+            tags={post.tags} 
+            post_category={post.post_category}
+            author_name={post.author_name}
+            post_date={post.$createdAt}
+            id={post.$id}
+            key={index}
+          />
+        ))}
       </div>
     </>
   );
+}
+
+interface Params extends ParsedUrlQuery {
+  category: string;
+  subcategory: string;
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { category, subcategory } = context.params as Params;
+
+  const res = await fetch(`${process.env.CLIENT_URL}/api/v1/${subcategory}/posts`);
+  const data = await res.json();
+
+  return {
+    props: {
+      category,
+      subcategory,
+      postsResponse: data,
+    },
+  };
 }

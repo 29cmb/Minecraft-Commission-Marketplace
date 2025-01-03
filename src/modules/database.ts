@@ -1,4 +1,4 @@
-import { Client, Databases, ID, Account, Query } from 'node-appwrite';
+import { Client, Databases, ID, Account, Query, Users } from 'node-appwrite';
 import { CommentData, PostData } from '../Types';
 
 const endpoint: string = process.env.APPWRITE_ENDPOINT || "https://cloud.appwrite.io/v1";
@@ -19,6 +19,7 @@ const client = new Client()
 
 const databases = new Databases(client);
 const accounts = new Account(client);
+const users = new Users(client);
 
 const signup = (email: string, username: string, password: string) => {
     return accounts.create(ID.unique(), email, password)
@@ -79,10 +80,47 @@ const getSubcategories = () => {
 }
 
 const getPostsInSubcategory = (subcategory: string) => {
-    return databases.listDocuments(databaseID, postsCollection, [
-        Query.equal("subcategory", subcategory)
-    ]);
-}
+    return new Promise(async (resolve, reject) => {
+        try {
+            const postsResponse = await databases.listDocuments(databaseID, postsCollection, [
+                Query.equal("subcategory", subcategory)
+            ]);
+
+            const posts = postsResponse.documents;
+
+            const promises = posts.map(async (post) => {
+                const author = post.author;
+                if (author == null) {
+                    post.author_name = "Unknown";
+                    return post;
+                }
+
+                const user = await users.get(author);
+
+                const userResponse = await databases.listDocuments(databaseID, usernamesCollection, [
+                    Query.equal("email", user.email)
+                ]);
+
+                if (userResponse.documents.length > 0) {
+                    post.author_name = userResponse.documents[0].username;
+                } else {
+                    post.author_name = "Unknown";
+                }
+
+                return post;
+            });
+
+            const updatedPosts = await Promise.all(promises);
+
+            resolve({
+                total: updatedPosts.length,
+                documents: updatedPosts
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
 
 const getUser = (secret: string) => {
     const client = new Client().setEndpoint(endpoint).setProject(project).setSession(secret);
