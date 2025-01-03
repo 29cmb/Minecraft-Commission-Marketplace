@@ -43,6 +43,9 @@ export default (app: Express) => {
             || (payment && typeof payment !== "number")
             || typeof post_category !== "string"
             || typeof subcategory !== "string"
+            || (tags && tags.some((tag: any) => typeof tag !== "string"))
+            || (payment && payment < 0)
+            || (tags.length > 6)
         ){
             res.status(400).json({ success: false, message: "Required fields not provided or not formatted properly" })
             return

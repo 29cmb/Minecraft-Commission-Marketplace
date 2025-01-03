@@ -9,7 +9,6 @@ export default function Subcategory({ subcategory, postsResponse }: { subcategor
   };
 
   if(!postsResponse || !postsResponse.posts) return <></>
-  console.log(postsResponse.posts)
   return (
     <>
       <h1 className="text-center font-inter font-bold text-[70px] mt-[40px]">
