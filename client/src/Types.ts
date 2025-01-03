@@ -73,3 +73,13 @@ export type SubcategoriesResponseSuccess = {
         ]
     }
 }
+
+export type PostProps = {
+    title: string,
+    short_description: string,
+    tags: Array<string>,
+    post_category: string,
+    post_color: string,
+    author_name: string,
+    post_date: string
+}
