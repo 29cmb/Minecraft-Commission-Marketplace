@@ -114,7 +114,7 @@ const getPostsInSubcategory = (subcategory: string) => {
                 return post;
             });
 
-            const updatedPosts = await Promise.all(promises);
+            const updatedPosts = (await Promise.all(promises)).filter(post => post !== null);
 
             resolve({
                 total: updatedPosts.length,
@@ -202,9 +202,36 @@ const updateVerification = (uid: string, secret: string, session: string) => {
     return userAccounts.updateVerification(uid, secret);
 }
 
-const getPost = (id: string) => {
-    return databases.getDocument(databaseID, postsCollection, id);
-}
+const getPost: (id: string) => Promise<PostData> = (id: string) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const post: DocumentPostData = await databases.getDocument(databaseID, postsCollection, id) as unknown as DocumentPostData;
+
+            const author = post.author;
+            if (author == null) {
+                post.author_name = "Unknown";
+                resolve(post);
+                return;
+            }
+
+            const user = await users.get(author);
+
+            const userResponse = await databases.listDocuments(databaseID, usernamesCollection, [
+                Query.equal("email", user.email)
+            ]);
+
+            if (userResponse.documents.length > 0) {
+                post.author_name = userResponse.documents[0].username;
+            } else {
+                post.author_name = "Unknown";
+            }
+
+            resolve(post as PostData);
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
 
 const postExists = async (id: string) => {
     return databases.getDocument(databaseID, postsCollection, id).then(() => {
@@ -240,26 +267,34 @@ const postComment = (comment: CommentData) => {
     )
 }
 
-const getPostComments = (id: string) => {
-    return databases.listDocuments(databaseID, commentsCollection, [
-        Query.equal("post_id", id)
-    ]);
+const getPostComments: (id: string) => Promise<{total: number, documents: CommentData[]}> = (id: string) => {
+    return new Promise(async (resolve, reject) => {
+        databases.listDocuments(databaseID, commentsCollection, [
+            Query.equal("post_id", id)
+        ]).then((response) => {
+            resolve(response as unknown as {total: number, documents: CommentData[]});
+        }).catch((error) => {
+            reject(error);
+        });
+    })
 }
 
 const likePost = async (id: string, session: string) => {
     const user = await getUser(session);
-    const post = await getPost(id);
+    const post: DocumentPostData = await getPost(id) as DocumentPostData;
+    const likes: string[] = post.likes || [];
 
-    if (post.likes.includes(user.$id)) {
+    if (likes.includes(user.$id)) {
         return databases.updateDocument(databaseID, postsCollection, id, {
-            likes: post.likes.filter((like: string) => like !== user.$id)
+            likes: likes.filter((like: string) => like !== user.$id)
         });
     } else {
         return databases.updateDocument(databaseID, postsCollection, id, {
-            likes: [...post.likes, user.$id]
+            likes: [...likes, user.$id]
         });
     }
 }
+
 
 const getLikes = async (session: string) => {
     return getUser(session).then((user) => {

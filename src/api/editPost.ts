@@ -1,5 +1,6 @@
 import { Express } from 'express'
 import { getPost, getUser, postExists, updatePost, userExists } from '../modules/database'
+import { PostData } from '../Types'
 export default (app: Express) => {
     app.post("/api/v1/editPost", async (req, res) => {
         const { id, newPostData } = req.body
@@ -15,8 +16,7 @@ export default (app: Express) => {
             return
         }
         
-        const post = await getPost(id)
-
+        const post: PostData = await getPost(id)
         if(!auth || !userExists(auth)){
             res.status(401).json({ success: false, message: "User cannot invoke method" })
             return

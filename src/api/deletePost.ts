@@ -1,5 +1,6 @@
 import { Express } from 'express'
 import { deletePost, getPost, getUser, postExists, userExists } from '../modules/database'
+import { PostData } from '../Types'
 export default (app: Express) => {
     app.post("/api/v1/deletePost", async(req, res) => {
         const { id } = req.body
@@ -21,7 +22,7 @@ export default (app: Express) => {
         }
 
         const user = await getUser(auth);
-        const post = await getPost(id);
+        const post: PostData = await getPost(id);
 
         if(post.author !== user.$id){
             res.status(403).json({ success: false, message: "User cannot delete post" })

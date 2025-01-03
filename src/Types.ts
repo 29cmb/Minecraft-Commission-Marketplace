@@ -11,8 +11,9 @@ export type PostData = {
     subcategory: string,
     author: string,
     approved?: boolean,
-    likes?: [] | [string]
+    likes?: [] | string[]
     author_name?: string
+    comments?: CommentData[]
 }
 
 export interface DocumentPostData extends Document, PostData {}
