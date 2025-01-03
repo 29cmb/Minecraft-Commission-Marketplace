@@ -9,6 +9,7 @@ export default function Subcategory({ subcategory, postsResponse }: { subcategor
   };
 
   if(!postsResponse || !postsResponse.posts) return <></>
+
   return (
     <>
       <h1 className="text-center font-inter font-bold text-[70px] mt-[40px]">
@@ -20,7 +21,7 @@ export default function Subcategory({ subcategory, postsResponse }: { subcategor
         </button>
       </div>
       <div className="p-[20px] px-[200px]">
-        {postsResponse.posts.documents.map((post, index) => (
+        {postsResponse.success && postsResponse.posts.documents.map((post, index) => (
           <Post 
             title={post.title} 
             short_description={post.short_description} 
@@ -30,6 +31,7 @@ export default function Subcategory({ subcategory, postsResponse }: { subcategor
             post_date={post.$createdAt}
             id={post.$id}
             key={index}
+            onPostPage={false}
           />
         ))}
       </div>

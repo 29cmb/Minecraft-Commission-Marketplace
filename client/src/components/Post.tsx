@@ -3,6 +3,7 @@
 import { PostProps } from "@/Types";
 import { format, isToday, isYesterday } from 'date-fns';
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 const formatTime = (date: Date) => {
     let hours = date.getHours();
@@ -25,7 +26,21 @@ const literals: {[key: string]: string} = {
     forhire: "For Hire"
 }
 
-export default function Post({ title, short_description, tags, post_category, author_name, post_date, id }: PostProps) {
+const easterEggClicks: string[] = [
+    "What are you clicking for?",
+    "Do you want something from me?",
+    "Stop clicking!",
+    "Thats getting annoying.",
+    "You're not getting free assets, stop asking.",
+    "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "Nibbl_z is going to be mad at you.",
+    "Why. Are. You. So. CLICKY!",
+    "Buddy.",
+    "Let me sleep!",
+    "I'm not a button!"
+]
+
+export default function Post({ title, short_description, tags, post_category, author_name, post_date, id, onPostPage }: PostProps) {
     const date = new Date(post_date);
     let formattedDate;
 
@@ -38,22 +53,35 @@ export default function Post({ title, short_description, tags, post_category, au
     }
 
     const router = useRouter();
+    const [clicks, setClicks] = useState(0);
 
     return (
         <div className="h-[130px] bg-[#111111] flex mx-auto rounded-[2em] relative mb-[10px] hover:scale-105 active:scale-[1.02] transition-all duration-200 ease-in-out hover:bg-[#1f1f1f]"
-            onClick={() => router.push(`/posts/${id}`)}
+            onClick={() => {
+                if(onPostPage) return router.push(`/post/${id}`)
+                setClicks(clicks + 1);
+                if(clicks % 40 == 0) {
+                    alert(easterEggClicks[Math.floor(Math.random() * easterEggClicks.length)]);
+                }
+            }}
         >
             <div className="absolute m-[20px]">
                 <div style={{ backgroundColor: colors[post_category] }} className="w-[15px] h-[15px] rounded-sm"></div>
                 <p className="absolute top-[-4px] left-[20px] w-screen font-inter font-bold">{literals[post_category]} • <span className="text-[#565656]">{formattedDate}</span></p>
             </div>
-            <h1 className="text-white font-inter font-bold text-[32px] leading-[100%] p-[20px] top-[20px] absolute">{title} <span className="text-[#424242] font-inter font-extrabold text-[20px]">{author_name}</span></h1>
+            <h1 className="text-white font-inter font-bold text-[32px] leading-[100%] p-[20px] top-[20px] absolute">{title} {!onPostPage && <span className="text-[#424242] font-inter font-extrabold text-[20px]">{author_name}</span>}</h1>
             <p className="text-white font-inter text-[20px] leading-[100%] p-[20px] top-[50px] absolute font-light"><i>{short_description}</i></p>
             <div className="absolute w-[100%] h-[40px] bottom-1 flex mx-[15px]">
                 {tags.map((tag, index) => (
                     <p key={index} className="leading-[100%] px-[13px] py-[1px] bg-[#363636] my-[10px] mx-[2px] font-black font-inter text-[#A4A4A4] rounded-full">{tag}</p>
                 ))}
             </div>
+            {
+                onPostPage && <div className="absolute right-0 top-50% translate-y-[25%] m-4 leading-[200%]">
+                    <p className="text-right font-inter font-extrabold text-[30px]">Posted by</p>
+                    <p className="text-right font-inter font-extrabold text-[30px] text-[#969696]">{author_name}</p>
+                </div>
+            }
         </div>
     );
 }

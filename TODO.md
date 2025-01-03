@@ -22,13 +22,13 @@
 - [x] Delete comment
 
 ## Frontend
-- [ ] Homepage
+- [x] Homepage
 - [ ] Signup
 - [ ] Login
-- [ ] Categories
-- [ ] Subcategories
-- [ ] Subcategory form posts
-- [ ] Single post
+- [x] Categories
+- [x] Subcategories
+- [x] Subcategory form posts
+- [x] Single post
 - [ ] Email verification
 - [ ] Password reset
 
