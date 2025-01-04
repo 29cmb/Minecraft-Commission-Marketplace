@@ -1,4 +1,5 @@
 import HomepageRedirectButton from "@/components/HomepageRedirectButton";
+import Topbar from "@/components/Topbar";
 import { PostsReponseSuccess, RequestFail } from "@/Types";
 
 export default async function Home() {
@@ -10,11 +11,12 @@ export default async function Home() {
 
   const postsInSpigot: PostsReponseSuccess | RequestFail = await fetch(`${process.env.SERVER_URL}/api/v1/Spigot/posts`).then(res => res.json());
   const totalPostsInSpigot: number = postsInSpigot.success ? postsInSpigot.posts.total : 0
-
+  
   return (
     <>
+      <Topbar loggedIn={false} /> {/* TODO */}
       <div className="bg-[#25262B] w-screen h-[30em] flex items-center justify-center">
-        <h1 className="text-white text-[80px] font-bold text-center pt-10 leading-[100%] pb-20">
+        <h1 className="text-white text-[80px] font-bold text-center pt-20 leading-[100%] pb-20">
           The easiest way to get<br/>
           <span className="bg-gradient-to-b from-[#A100FF] to-[#450099] bg-clip-text text-transparent font-inter font-black relative top-[5px]">
             Minecraft Development

@@ -58,9 +58,9 @@ export default function Post({ title, short_description, tags, post_category, au
     return (
         <div className="h-[130px] bg-[#111111] flex mx-auto rounded-[2em] relative mb-[10px] hover:scale-105 active:scale-[1.02] transition-all duration-200 ease-in-out hover:bg-[#1f1f1f]"
             onClick={() => {
-                if(onPostPage) return router.push(`/post/${id}`)
+                if(!onPostPage) return router.push(`/post/${id}`)
                 setClicks(clicks + 1);
-                if(clicks % 40 == 0) {
+                if(clicks % 60 == 39) {
                     alert(easterEggClicks[Math.floor(Math.random() * easterEggClicks.length)]);
                 }
             }}
