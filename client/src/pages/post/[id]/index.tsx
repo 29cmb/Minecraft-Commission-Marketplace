@@ -1,17 +1,20 @@
 import Post from "@/components/Post";
+import Topbar from "@/components/Topbar";
 import "@/styles/globals.css";
 import { PostResponseSuccess, RequestFail } from "@/Types";
+import { GetLoggedInProp } from "@/util";
 import { GetServerSideProps } from "next";
 import { ParsedUrlQuery } from "querystring";
 import React from "react";
 
-export default function PostPage({ categories }: { categories: PostResponseSuccess | RequestFail }) {
+export default function PostPage({ categories, loggedIn }: { categories: PostResponseSuccess | RequestFail, loggedIn: boolean }) {
     if(categories.success == false){
         return <></>
     }
 
     return <>
-        <div className="p-[30px] m-[30px]">
+        <Topbar loggedIn={loggedIn} />
+        <div className="p-[30px] mx-[30px] pt-[120px]">
             <Post
                 title={categories.post.title}
                 short_description={categories.post.short_description}
@@ -40,15 +43,22 @@ interface Params extends ParsedUrlQuery {
   id: string;
 }
 
+interface LoggedInProps extends GetServerSideProps {
+    props: {loggedIn: boolean};
+}
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { id } = context.params as Params;
 
     const res = await fetch(`${process.env.SERVER_URL}/api/v1/post/${id}`);
     const categories: PostResponseSuccess | RequestFail = await res.json();
+    const loggedInResult = await GetLoggedInProp(context) as unknown as LoggedInProps;
+    const { loggedIn } = loggedInResult.props;
 
     return {
         props: {
             categories,
+            loggedIn,
         },
     };
 };

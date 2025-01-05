@@ -32,7 +32,7 @@ const Form: React.FC<FormProps> = ({ inputs, subtext, buttonData }) => {
                 </div>
             ))}
             <p className="text-white text-center">{subtext}</p>
-            <p id="note" className="text-red-500 p-[30px]" />
+            <p id="note" className="text-center font-inter font-bold text-[20px] leading-[100%] mt-[20px]" />
             <button
                 onClick={submit}
                 className="bg-green-600 text-white border-none rounded-[15px] absolute bottom-[20px] w-[90%] h-[70px] text-[40px] transition-all duration-200 ease-in-out hover:text-[45px] hover:h-[75px] hover:w-[92%] active:bg-green-700"

@@ -23,12 +23,14 @@
 
 ## Frontend
 - [x] Homepage
-- [ ] Signup
-- [ ] Login
+- [x] Signup
+- [x] Login
 - [x] Categories
 - [x] Subcategories
 - [x] Subcategory form posts
 - [x] Single post
+- [ ] Posting
+- [ ] Pagination on the subcategory page
 - [ ] Email verification
 - [ ] Password reset
 

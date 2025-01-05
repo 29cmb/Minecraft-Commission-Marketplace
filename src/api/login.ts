@@ -13,22 +13,12 @@ export default (app: Express) => {
             return;
         }
 
-        if(username.length < 3 || username.length > 32) {
-            res.status(400).json({ success: false, message: "Username must be at least 3 characters long and must not be over 32 characters" })
-            return;
-        }
-
-        if(password.length < 6) {
-            res.status(400).json({ success: false, message: "Password must be at least 6 characters long" })
-            return;
-        }
-
         login(username, password)
             .then((response) => {
                 res.status(200).json({ success: true, message: "Logged in successfully", secret: response.secret });
             })
             .catch((error) => {
-                res.status(400).json({ success: false, message: error.message || "Login failed" });
+                res.status(400).json({ success: false, message: error.message.replace("email", "username") || "Login failed" });
             });
     })
     return {
