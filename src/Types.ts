@@ -16,7 +16,9 @@ export type PostData = {
     comments?: CommentData[]
 }
 
-export interface DocumentPostData extends Document, PostData {}
+export interface DocumentPostData extends Document, PostData {
+    $createdAt: string
+}
 
 export type CommentData = {
     post_id: string,

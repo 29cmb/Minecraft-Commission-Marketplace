@@ -6,10 +6,13 @@ import { PostsReponseSuccess } from '@/Types';
 import { GetLoggedInProp } from "@/util";
 import Topbar from "@/components/Topbar";
 import Pagination from "@/components/Pagination";
-export default function Subcategory({ subcategory, postsResponse, loggedIn, activePage, totalPages }: { subcategory: string, postsResponse: PostsReponseSuccess, loggedIn: boolean, activePage: number, totalPages: number }) {
+import { useRouter } from "next/navigation";
+export default function Subcategory({ category, subcategory, postsResponse, loggedIn, activePage, totalPages }: { category: string, subcategory: string, postsResponse: PostsReponseSuccess, loggedIn: boolean, activePage: number, totalPages: number }) {
   const capitalizeFirstLetter = (string: string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
+
+  const router = useRouter();
 
   if(!postsResponse || !postsResponse.posts) return <></>
   return (
@@ -19,7 +22,9 @@ export default function Subcategory({ subcategory, postsResponse, loggedIn, acti
         {subcategory ? capitalizeFirstLetter(subcategory as string) : 'Loading...'}
       </h1>
       <div className="flex justify-center">
-        <button className="inline-flex items-center justify-center text-center font-inter text-white text-[30px] bg-[#36BE5A] py-[10px] w-[calc(100vw-400px)] leading-none rounded-xl transform transition-transform duration-200 ease-in-out hover:scale-110">
+        <button onClick={() => {
+          router.push(`/forms/${category}/${subcategory}/post`)
+        }} className="inline-flex items-center justify-center text-center font-inter text-white text-[30px] bg-[#36BE5A] py-[10px] w-[calc(100vw-400px)] leading-none rounded-xl transform transition-transform duration-200 ease-in-out hover:scale-110">
           Post
         </button>
       </div>

@@ -33,19 +33,18 @@ export default (app: Express) => {
             || !comments_enabled
             || !post_category
             || !subcategory
+            || !discord_contact
             || typeof title !== "string"
             || typeof short_description !== "string"
             || typeof long_description !== "string"
             || typeof comments_enabled !== "boolean"
-            || (tags && !Array.isArray(tags))
-            || (discord_contact && typeof discord_contact !== "string")
+            || typeof discord_contact !== "string"
+            || (tags && !Array.isArray(tags) && tags.some((tag: any) => typeof tag !== "string") && tags.length > 6)
             || (portfolio_link && (typeof portfolio_link !== "string" || !portfolio_link.startsWith("http")))
             || (payment && typeof payment !== "number")
             || typeof post_category !== "string"
             || typeof subcategory !== "string"
-            || (tags && tags.some((tag: any) => typeof tag !== "string"))
             || (payment && payment < 0)
-            || (tags.length > 6)
         ){
             res.status(400).json({ success: false, message: "Required fields not provided or not formatted properly" })
             return
@@ -57,7 +56,7 @@ export default (app: Express) => {
         }
 
         postToQueue({title, short_description,long_description,comments_enabled,tags,discord_contact,portfolio_link,payment,post_category,subcategory,author: user.$id}, await isStaff(auth)).then(() => {
-            res.status(200).json({ success: true, message: "Post submitted successfully" });
+            res.status(200).json({ success: true, message: "Post submitted to the review queue successfully!" });
         }).catch((error) => {
             res.status(400).json({ success: false, message: error.message || "Failed to submit post" });
         })

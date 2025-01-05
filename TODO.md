@@ -30,7 +30,7 @@
 - [x] Subcategory form posts
 - [x] Single post
 - [ ] Posting
-- [ ] Pagination on the subcategory page
+- [x] Pagination on the subcategory page
 - [ ] Email verification
 - [ ] Password reset
 

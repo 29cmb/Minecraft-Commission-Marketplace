@@ -91,7 +91,7 @@ const getPostsInSubcategory = (subcategory: string, page: number) => {
                 Query.offset(offset)
             ]);
 
-            const posts: DocumentPostData[] = postsResponse.documents as unknown as DocumentPostData[];
+            let posts: DocumentPostData[] = postsResponse.documents as unknown as DocumentPostData[];
 
             const promises = posts.map(async (post: DocumentPostData) => {
                 if (post.approved === false) {
@@ -119,7 +119,18 @@ const getPostsInSubcategory = (subcategory: string, page: number) => {
                 return post;
             });
 
-            const updatedPosts = (await Promise.all(promises)).filter(post => post !== null);
+            let updatedPosts = (await Promise.all(promises)).filter(post => post !== null);
+
+            updatedPosts = updatedPosts.sort((a, b) => {
+                if (a.post_category === 'announcement' && b.post_category !== 'announcement') {
+                    return -1;
+                }
+                if (a.post_category !== 'announcement' && b.post_category === 'announcement') {
+                    return 1;
+                }
+
+                return new Date(b.$createdAt).getTime() - new Date(a.$createdAt).getTime();
+            });
 
             resolve({
                 total: postsResponse.total,

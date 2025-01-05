@@ -4,7 +4,9 @@ export const GetLoggedInProp: GetServerSideProps = async (context) => {
     const { req } = context;
     const cookies = req.headers.cookie?.split('; ') || [];
     const sessionCookie = cookies.find(cookie => cookie.startsWith('session='))?.substring(8);
-    const response = await fetch("http://localhost:3000/api/v1/user", {
+    if(!sessionCookie) return { props: { loggedIn: false } }
+
+    const response = await fetch(`${process.env.SERVER_URL}/api/v1/user`, {
         headers: {
             "Authorization": sessionCookie || ""
         }
