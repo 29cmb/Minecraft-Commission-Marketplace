@@ -5,14 +5,13 @@ import { ParsedUrlQuery } from 'querystring';
 import { PostsReponseSuccess } from '@/Types';
 import { GetLoggedInProp } from "@/util";
 import Topbar from "@/components/Topbar";
-export default function Subcategory({ subcategory, postsResponse, loggedIn }: { subcategory: string, postsResponse: PostsReponseSuccess, loggedIn: boolean }) {
+import Pagination from "@/components/Pagination";
+export default function Subcategory({ subcategory, postsResponse, loggedIn, activePage, totalPages }: { subcategory: string, postsResponse: PostsReponseSuccess, loggedIn: boolean, activePage: number, totalPages: number }) {
   const capitalizeFirstLetter = (string: string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
   if(!postsResponse || !postsResponse.posts) return <></>
-
-  // TODO pagination
   return (
     <>
       <Topbar loggedIn={loggedIn} />
@@ -39,6 +38,7 @@ export default function Subcategory({ subcategory, postsResponse, loggedIn }: { 
           />
         ))}
       </div>
+      <Pagination currentPage={activePage} totalPages={totalPages}/>
     </>
   );
 }
@@ -54,8 +54,12 @@ interface LoggedInProps extends GetServerSideProps {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { category, subcategory } = context.params as Params;
+  const page = parseInt(context.query.page as string) || 1;
 
-  const res = await fetch(`${process.env.SERVER_URL}/api/v1/${subcategory}/posts`);
+  let totalPages = await fetch(`${process.env.SERVER_URL}/api/v1/pages/${subcategory}`).then(res => res.json()).then(data => data.pages);
+  if(!totalPages) totalPages = 1;
+
+  const res = await fetch(`${process.env.SERVER_URL}/api/v1/${subcategory}/posts?page=${Math.min(page, totalPages)}`);
   const data = await res.json();
 
   const loggedInResult = await GetLoggedInProp(context) as unknown as LoggedInProps;
@@ -66,7 +70,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       category,
       subcategory,
       postsResponse: data,
-      loggedIn
+      loggedIn,
+      activePage: Math.min(page, totalPages),
+      totalPages
     },
   };
 }

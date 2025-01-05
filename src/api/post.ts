@@ -56,7 +56,7 @@ export default (app: Express) => {
             return
         }
 
-        postToQueue({title, short_description,long_description,comments_enabled,tags,discord_contact,portfolio_link,payment,post_category,subcategory,author: user.$id}).then(() => {
+        postToQueue({title, short_description,long_description,comments_enabled,tags,discord_contact,portfolio_link,payment,post_category,subcategory,author: user.$id}, await isStaff(auth)).then(() => {
             res.status(200).json({ success: true, message: "Post submitted successfully" });
         }).catch((error) => {
             res.status(400).json({ success: false, message: error.message || "Failed to submit post" });

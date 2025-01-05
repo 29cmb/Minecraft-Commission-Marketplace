@@ -79,17 +79,22 @@ const getSubcategories = () => {
     return databases.listDocuments(databaseID, subcategoriesCollection);
 }
 
-const getPostsInSubcategory = (subcategory: string) => {
+const getPostsInSubcategory = (subcategory: string, page: number) => {
+    const limit = 10; // change later maybe
     return new Promise(async (resolve, reject) => {
         try {
+            const offset = (page - 1) * limit;
+
             const postsResponse = await databases.listDocuments(databaseID, postsCollection, [
-                Query.equal("subcategory", subcategory)
+                Query.equal("subcategory", subcategory),
+                Query.limit(limit),
+                Query.offset(offset)
             ]);
 
             const posts: DocumentPostData[] = postsResponse.documents as unknown as DocumentPostData[];
 
             const promises = posts.map(async (post: DocumentPostData) => {
-                if(post.approved === false) {
+                if (post.approved === false) {
                     return null;
                 }
 
@@ -117,7 +122,7 @@ const getPostsInSubcategory = (subcategory: string) => {
             const updatedPosts = (await Promise.all(promises)).filter(post => post !== null);
 
             resolve({
-                total: updatedPosts.length,
+                total: postsResponse.total,
                 documents: updatedPosts
             });
         } catch (error) {
@@ -133,10 +138,10 @@ const getUser:
     return clientAccounts.get()
 }
 
-const postToQueue = (data: PostData) => {
+const postToQueue = (data: PostData, isStaff: boolean) => {
     const newData: PostData = {
         ...data,
-        approved: false,
+        approved: isStaff,
         likes: []
     }
 
@@ -346,6 +351,15 @@ const categoryExists = async (category: string) => {
     });
 }
 
+const subcategoryPages = async (subcategory: string) => {
+    return databases.listDocuments(databaseID, postsCollection, [
+        Query.equal('subcategory', subcategory),
+        Query.equal('approved', true)
+    ]).then((response) => {
+        return Math.ceil(response.total / 10);
+    });
+}
+
 export { 
     signup, 
     login, 
@@ -375,5 +389,6 @@ export {
     editComment,
     deleteComment,
     getPostsInCategory,
-    categoryExists
+    categoryExists,
+    subcategoryPages
 };
