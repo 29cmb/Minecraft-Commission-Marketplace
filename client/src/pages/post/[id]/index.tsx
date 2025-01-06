@@ -7,7 +7,7 @@ import { GetServerSideProps } from "next";
 import { ParsedUrlQuery } from "querystring";
 import React from "react";
 
-export default function PostPage({ categories, loggedIn }: { categories: PostResponseSuccess | RequestFail, loggedIn: boolean }) {
+export default function PostPage({ categories, loggedIn, session }: { categories: PostResponseSuccess | RequestFail, loggedIn: boolean, session: string }) {
     if(categories.success == false){
         return <></>
     }
@@ -24,6 +24,8 @@ export default function PostPage({ categories, loggedIn }: { categories: PostRes
                 post_date={categories.post.$createdAt}
                 id={categories.post.$id}
                 onPostPage={true}
+                approved={categories.post.approved}
+                session={session}
             ></Post>
             <div className="mt-[30px] min-h-[300px] bg-[#111111] flex mx-auto rounded-[2em] relative mb-[10px]">
                 <p className="p-[20px]">
@@ -55,10 +57,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const loggedInResult = await GetLoggedInProp(context) as unknown as LoggedInProps;
     const { loggedIn } = loggedInResult.props;
 
+    const { req } = context;
+    const cookies = req.headers.cookie?.split('; ') || [];
+    const sessionCookie = cookies.find(cookie => cookie.startsWith('session='))?.substring(8);
+
     return {
         props: {
             categories,
             loggedIn,
+            session: sessionCookie
         },
     };
 };

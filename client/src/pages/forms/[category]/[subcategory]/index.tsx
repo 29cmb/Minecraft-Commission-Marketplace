@@ -40,6 +40,7 @@ export default function Subcategory({ category, subcategory, postsResponse, logg
             id={post.$id}
             key={index}
             onPostPage={false}
+            approved={post.approved}
           />
         ))}
       </div>
@@ -61,10 +62,23 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { category, subcategory } = context.params as Params;
   const page = parseInt(context.query.page as string) || 1;
 
-  let totalPages = await fetch(`${process.env.SERVER_URL}/api/v1/pages/${subcategory}`).then(res => res.json()).then(data => data.pages);
+  const { req } = context;
+  const cookies = req.headers.cookie?.split('; ') || [];
+  const sessionCookie = cookies.find(cookie => cookie.startsWith('session='))?.substring(8);
+
+  let totalPages = await fetch(`${process.env.SERVER_URL}/api/v1/pages/${subcategory}`, {
+    headers: {
+      "Authorization": sessionCookie || ""
+    }
+  }).then(res => res.json()).then(data => data.pages);
   if(!totalPages) totalPages = 1;
 
-  const res = await fetch(`${process.env.SERVER_URL}/api/v1/${subcategory}/posts?page=${Math.min(page, totalPages)}`);
+
+  const res = await fetch(`${process.env.SERVER_URL}/api/v1/${subcategory}/posts?page=${Math.min(page, totalPages)}`, {
+    headers: {
+      "Authorization": sessionCookie || ""
+    }
+  });
   const data = await res.json();
 
   const loggedInResult = await GetLoggedInProp(context) as unknown as LoggedInProps;

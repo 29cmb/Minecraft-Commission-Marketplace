@@ -91,4 +91,6 @@ export type PostProps = {
     post_date: string,
     id: string,
     onPostPage: boolean | false
+    approved: boolean,
+    session?: string
 }

@@ -79,7 +79,7 @@ const getSubcategories = () => {
     return databases.listDocuments(databaseID, subcategoriesCollection);
 }
 
-const getPostsInSubcategory = (subcategory: string, page: number) => {
+const getPostsInSubcategory = (subcategory: string, page: number, auth: string | undefined) => {
     const limit = 10; // change later maybe
     return new Promise(async (resolve, reject) => {
         try {
@@ -93,8 +93,13 @@ const getPostsInSubcategory = (subcategory: string, page: number) => {
 
             let posts: DocumentPostData[] = postsResponse.documents as unknown as DocumentPostData[];
 
+            let staffUser: Client | undefined;
+            if(auth && await isStaff(auth)) {
+                staffUser = new Client().setEndpoint(endpoint).setProject(project).setSession(auth);
+            }
+
             const promises = posts.map(async (post: DocumentPostData) => {
-                if (post.approved === false) {
+                if (post.approved === false && (staffUser == undefined)) {
                     return null;
                 }
 
@@ -344,7 +349,8 @@ const deleteComment = (id: string) => {
 
 const getPostsInCategory = async (category: string) => {
     return databases.listDocuments(databaseID, subcategoriesCollection, [
-        Query.equal('category', category)
+        Query.equal('category', category),
+        Query.equal('approved', true)
     ])
     .then((subcategories) => {
         const subcategoryName = subcategories.documents.map((doc) => doc.name);
@@ -362,11 +368,18 @@ const categoryExists = async (category: string) => {
     });
 }
 
-const subcategoryPages = async (subcategory: string) => {
-    return databases.listDocuments(databaseID, postsCollection, [
+const subcategoryPages = async (subcategory: string, auth: string | undefined) => {
+    const staffBool = auth ? await isStaff(auth) : false;
+    const queries = [
         Query.equal('subcategory', subcategory),
         Query.equal('approved', true)
-    ]).then((response) => {
+    ]
+
+    if (!staffBool) {
+        queries.push(Query.equal('approved', true));
+    }
+
+    return databases.listDocuments(databaseID, postsCollection, queries).then((response) => {
         return Math.ceil(response.total / 10);
     });
 }
