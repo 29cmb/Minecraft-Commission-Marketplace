@@ -29,10 +29,8 @@
 - [x] Subcategories
 - [x] Subcategory form posts
 - [x] Single post
-- [ ] Posting
+- [x] Posting
 - [x] Pagination on the subcategory page
-- [ ] Email verification
-- [ ] Password reset
 
 
 ## Potential features for a future update
