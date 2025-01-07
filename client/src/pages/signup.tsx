@@ -33,7 +33,7 @@ export default function Signup({ loggedIn }: { loggedIn: boolean }) {
                 ]}
                 subtext={<span className="font-inter text-[30px] leading-[120%]">Already have an account?<br/>Log in <Link href="/login"><u className="text-[#54bbff]">here!</u></Link></span>}
                 buttonData={["Signup", (/**note, email, username, password*/) => {
-                    
+                    // So it appears I forgot the main feature of the application DAMNIT
                 }]}
              />
         </>
