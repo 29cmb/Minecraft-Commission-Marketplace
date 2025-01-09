@@ -2,6 +2,10 @@ import { Express } from 'express'
 import { likePost, postExists, userExists } from '../modules/database'
 export default (app: Express) => {
     app.post("/api/v1/like", async (req, res) => {
+        if(!req.body){ 
+            res.status(400).json({ success: false, message: "Required fields not provided or not formatted properly" })
+            return 
+        }
         const { id } = req.body
         if(!id || typeof id !== "string"){
             res.status(400).json({ success: false, message: "Required fields not provided or not formatted properly" })

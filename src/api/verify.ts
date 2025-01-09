@@ -2,6 +2,10 @@ import { Express } from 'express'
 import { updateVerification, userExists } from '../modules/database'
 export default (app: Express) => {
     app.post("/api/v1/verify", async (req, res) => {
+        if(!req.body){ 
+            res.status(400).json({ success: false, message: "Required fields not provided or not formatted properly" })
+            return 
+        }
         const { secret, uid } = req.body
         const auth = req.headers.authorization;
 

@@ -2,6 +2,10 @@ import { Express } from 'express'
 import { createRecovery } from '../modules/database'
 export default (app: Express) => {
     app.post("/api/v1/reset-password", (req, res) => {
+        if(!req.body){ 
+            res.status(400).json({ success: false, message: "Required fields not provided or not formatted properly" })
+            return 
+        }
         const { email } = req.body
         if(!email || typeof email !== "string"){
             res.status(400).json({ success: false, message: "Required fields not provided or not formatted properly" })

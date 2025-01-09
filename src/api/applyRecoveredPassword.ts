@@ -3,6 +3,11 @@ import { updateRecovery } from '../modules/database'
 
 export default (app: Express) => {
     app.post("/api/v1/apply-recover", (req, res) => {
+        if(!req.body){ 
+            res.status(400).json({ success: false, message: "Required fields not provided or not formatted properly" })
+            return 
+        }
+
         const { uid, secret, password } = req.body
         if(!uid || !secret || typeof uid !== "string" || typeof secret !== "string" || !password || typeof password !== "string"){
             res.status(400).json({ success: false, message: "Required fields not provided or not formatted properly" })

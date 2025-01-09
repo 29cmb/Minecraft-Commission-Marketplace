@@ -2,6 +2,11 @@ import { Express } from 'express';
 import { getUser, isStaff, postToQueue, userExists } from '../modules/database';
 export default (app: Express) => {
     app.post("/api/v1/post", async(req, res) => {
+        if(!req.body){ 
+            res.status(400).json({ success: false, message: "Required fields not provided or not formatted properly" })
+            return 
+        }
+
         const { 
             title, 
             short_description, 

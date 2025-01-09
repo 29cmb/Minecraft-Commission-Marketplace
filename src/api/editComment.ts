@@ -2,6 +2,10 @@ import { Express } from 'express'
 import { commentExists, editComment, getComment, getUser, userExists } from '../modules/database';
 export default (app: Express) => {
     app.post("/api/v1/edit-comment", async (req, res) => {
+        if(!req.body){ 
+            res.status(400).json({ success: false, message: "Required fields not provided or not formatted properly" })
+            return 
+        }
         const { id, content } = req.body;
         if(!id || !content || typeof id !== "string" || typeof content !== "string"){
             res.status(400).json({ success: false, message: "Required fields not provided or not formatted properly" })

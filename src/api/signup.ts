@@ -2,6 +2,10 @@ import { Express } from "express"
 import { signup } from "../modules/database"
 export default (app: Express) => {
     app.post("/api/v1/signup", (req, res) => {
+        if(!req.body){ 
+            res.status(400).json({ success: false, message: "Required fields not provided or not formatted properly" })
+            return 
+        }
         const { email, username, password } = req.body
         if (
             !email 

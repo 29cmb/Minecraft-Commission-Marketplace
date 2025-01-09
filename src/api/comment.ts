@@ -3,6 +3,10 @@ import { getPost, getUser, isStaff, userExists, postComment, postExists } from '
 import { CommentData } from '../Types';
 export default (app: Express) => {
     app.post("/api/v1/comment", async(req, res) => {
+        if(!req.body){ 
+            res.status(400).json({ success: false, message: "Required fields not provided or not formatted properly" })
+            return 
+        }
         const { id, comment } = req.body
         if(!id || typeof id !== "string" || !comment || typeof comment !== "string") {
             res.status(400).json({ success: false, message: "Required fields not provided or not formatted properly" })

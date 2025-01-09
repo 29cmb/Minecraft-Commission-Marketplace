@@ -4,7 +4,6 @@ import { CommentData } from '../Types';
 
 export default (app: Express) => {
     app.get("/api/v1/post/:id", async (req, res) => {
-        console.log("GET /api/v1/post/:id");
         const { id } = req.params;
         if (!id || typeof id !== "string") {
             res.status(400).json({ success: false, message: "Required fields not provided or not formatted properly" });

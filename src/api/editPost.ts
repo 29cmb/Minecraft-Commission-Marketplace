@@ -3,6 +3,10 @@ import { getPost, getUser, postExists, updatePost, userExists } from '../modules
 import { PostData } from '../Types'
 export default (app: Express) => {
     app.post("/api/v1/editPost", async (req, res) => {
+        if(!req.body){ 
+            res.status(400).json({ success: false, message: "Required fields not provided or not formatted properly" })
+            return 
+        }
         const { id, newPostData } = req.body
         const auth = req.headers.authorization
 
