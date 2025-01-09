@@ -32,8 +32,19 @@ export default function Signup({ loggedIn }: { loggedIn: boolean }) {
                     {id: "password", type: "password", placeholder: "Password"}
                 ]}
                 subtext={<span className="font-inter text-[30px] leading-[120%]">Already have an account?<br/>Log in <Link href="/login"><u className="text-[#54bbff]">here!</u></Link></span>}
-                buttonData={["Signup", (/**note, email, username, password*/) => {
-                    // So it appears I forgot the main feature of the application DAMNIT
+                buttonData={["Signup", (note, email, username, password) => {
+                    fetch("/api/v1/signup", {
+                        method: "POST",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify({email, username, password})
+                    }).then(data => data.json()).then(async data => {
+                        if(data.success){
+                            note.innerHTML = `<span style="color:lime">${data.message}</span>`;
+                            router.push("/login");
+                        } else {
+                            note.innerHTML = `<span style="color:red">${data.message}</span>`;
+                        }
+                    });
                 }]}
              />
         </>
