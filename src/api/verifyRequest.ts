@@ -2,7 +2,7 @@ import { Express } from 'express'
 import { createVerification, getUser, userExists } from '../modules/database';
 export default (app: Express) => {
     app.post("/api/v1/verify-request", async (req, res) => {
-        if(!req.body){ 
+        if(!req.body || !req.headers){ 
             res.status(400).json({ success: false, message: "Required fields not provided or not formatted properly" })
             return 
         }
