@@ -20,7 +20,7 @@ export default (app: Express) => {
             return
         }
 
-        if(!postExists(id)){
+        if(!await postExists(id)){
             res.status(404).json({ success: false, message: "Post not found" })
             return
         }

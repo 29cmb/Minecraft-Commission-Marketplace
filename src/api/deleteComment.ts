@@ -19,7 +19,7 @@ export default (app: Express) => {
             return
         }
 
-        if(!commentExists(id)){
+        if(!await commentExists(id)){
             res.status(404).json({ success: false, message: "Comment not found" })
             return
         }
